@@ -1,7 +1,8 @@
 <?php
-$servername = "cslinux0.comp.hkbu.edu.hk";
+$servername = "localhost";
 $username = "comp4107_grp08";
 $password = "246186";
+//246186
 $dbname = "comp4107_grp08";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -12,18 +13,17 @@ if ($conn->connect_error) {
 $req = json_decode($_POST["BAMSReq"], false);
 //Login
 if (strcmp($req->msgType, "LoginReq") === 0) {
-  $sql = "select * from card where PK_cardID = '$req->cardNo' and Password = '$req->pin'";
-  $result = mysqli_query($db,$sql);
-  $row = mysqli_fetch_array($result);
-  // $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-  $active = $row['active'];
-  if(mysqli_num_rows($result)==1){
+  $sql = "SELECT * FROM card WHERE PK_cardID = '$req->cardNo' AND Password = '$req->pin'";
+  $result = $conn->query($sql);
+  $row = $result->fetch_assoc();
+  if ($result->num_rows > 0) {
     $reply->msgType = "LoginReply";
     $reply->cardNo = $req->cardNo;
-    $reply->cred = "Credible Credential!!!";
+    $reply->cred = "abcd1234";
+    $reply->status = "Suscces";
   }else{
     $reply->msgType = "LoginReply";
-    $reply->cred = "Wrong Password";
+    $reply->status = "Fail";
   }
 //
 }else if (strcmp($req->msgType, "GetAccReq") === 0) {
