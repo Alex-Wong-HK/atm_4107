@@ -26,22 +26,22 @@ public class ATMSSEmulatorStarter extends ATMSSStarter {
     //------------------------------------------------------------
     // startHandlers
     @Override
-    protected void startHandlers() {
-        Emulators.atmssEmulatorStarter = this;
-        new Emulators().start();
-    } // startHandlers
+		protected void startHandlers() {
+			Emulators.atmssEmulatorStarter = this;
+			new Emulators().start();
+		} // startHandlers
 
 
-    //------------------------------------------------------------
-    // Emulators
-    public static class Emulators extends Application {
-        private static ATMSSEmulatorStarter atmssEmulatorStarter;
+		//------------------------------------------------------------
+		// Emulators
+		public static class Emulators extends Application {
+			private static ATMSSEmulatorStarter atmssEmulatorStarter;
 
-	//----------------------------------------
-	// start
-        public void start() {
-            launch();
-	} // start
+			//----------------------------------------
+			// start
+			public void start() {
+				launch();
+			} // start
 
 	//----------------------------------------
 	// start
