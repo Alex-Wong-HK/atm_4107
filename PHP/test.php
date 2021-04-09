@@ -79,7 +79,7 @@ if (strcmp($req->msgType, "LoginReq") === 0) {
     }
   }else(){
     $reply->msgType = "WithdrawReply";
-    $reply->status = "Wrong cred";
+    $reply->status = "ERROR";
   }
 
 
