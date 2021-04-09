@@ -22,25 +22,45 @@ if (strcmp($req->msgType, "LoginReq") === 0) {
     $reply->msgType = "LoginReply";
     $reply->cardNo = $req->cardNo;
     $reply->cred = $newCred;
-    $cred = $newCred;
     $reply->status = "Suscces";
+    $sql2 = "UPDATE card set cred = '$newCred' where PK_cardID = '$req->cardNo'";
+    $result2 = $conn->query($sql2);
   }else{
     $reply->msgType = "LoginReply";
     $reply->status = "Fail";
   }
 //
+}else if (strcmp($req->msgType, "LogoutReq") === 0) {
+  $sql = "SELECT cred FROM card WHERE PK_cardID = '$req->cardNo' AND Password = '$req->pin'";
+  $cred = $conn->query($sql);
+  if(strcmp($req->cred, $cred) === 0){
+    $reply->msgType = "LogoutReply";
+    $reply->cardNo = $req->cardNo;
+    $reply->cred = $req->cred;
+    $reply->result = "succ";
+    $reply->status = "Suscces";
+  }
+
+
+
 }else if (strcmp($req->msgType, "GetAccReq") === 0) {
-  $sql = "SELECT PK_cardID FROM card WHERE PK_cardID = '$req->cardNo' AND Password = '$req->pin'";
-  $account = $conn->query($sql);
-  $reply->msgType = "GetAccReply";
-  $reply->cardNo = $req->cardNo;
-  $reply->cred = $cred;
-  $reply->status = "Suscces";
+  $sql = "SELECT cred FROM card WHERE PK_cardID = '$req->cardNo' AND Password = '$req->pin'";
+  $cred = $conn->query($sql);
+  if(strcmp($req->cred, $cred) === 0){
+    $sql = "SELECT PK_cardID FROM card WHERE PK_cardID = '$req->cardNo' AND Password = '$req->pin'";
+    $account = $conn->query($sql);
+    $reply->msgType = "GetAccReply";
+    $reply->cardNo = $req->cardNo;
+    $reply->cred = $cred;
+    $reply->status = "Suscces";
+  }
+  
   
 
-
 } else if (strcmp($req->msgType, "WithdrawReq") === 0) {
-  if($cred === $req->cred){
+  $sql = "SELECT cred FROM card WHERE PK_cardID = '$req->cardNo' AND Password = '$req->pin'";
+  $cred = $conn->query($sql);
+  if(strcmp($req->cred, $cred) === 0){
     $sql = "SELECT Balance FROM card WHERE PK_cardID = '$req->cardNo'";
     $balance = $conn->query($sql);
     $reply->msgType = "WithdrawReply";
@@ -64,7 +84,9 @@ if (strcmp($req->msgType, "LoginReq") === 0) {
 
 
 } else if (strcmp($req->msgType, "DepositReq") === 0) {
-  if($cred === $req->cred){
+  $sql = "SELECT cred FROM card WHERE PK_cardID = '$req->cardNo' AND Password = '$req->pin'";
+  $cred = $conn->query($sql);
+  if(strcmp($req->cred, $cred) === 0){
     if($cred === $req->cred){
       $sql = "SELECT Balance FROM card WHERE PK_cardID = '$req->cardNo'";
       $balance = $conn->query($sql);
@@ -79,12 +101,14 @@ if (strcmp($req->msgType, "LoginReq") === 0) {
     }
   }else(){
     $reply->msgType = "WithdrawReply";
-    $reply->status = "Wrong cred";
+    $reply->status = "ERROR";
   }
 
 
 } else if (strcmp($req->msgType, "EnquiryReq") === 0) {
-  if($cred === $req->cred){
+  $sql = "SELECT cred FROM card WHERE PK_cardID = '$req->cardNo' AND Password = '$req->pin'";
+  $cred = $conn->query($sql);
+  if(strcmp($req->cred, $cred) === 0){
     $sql = "SELECT Balance FROM card WHERE PK_cardID = '$req->cardNo'";
     $balance = $conn->query($sql);
     $reply->msgType = "EnquiryReply";
@@ -95,12 +119,14 @@ if (strcmp($req->msgType, "LoginReq") === 0) {
     $reply->status = "Suscces";
   }else(){
     $reply->msgType = "WithdrawReply";
-    $reply->status = "Wrong cred";
+    $reply->status = "ERROR";
   }
 
 
 } else if (strcmp($req->msgType, "TransferReq") === 0) {
-  if($cred === $req->cred){
+  $sql = "SELECT cred FROM card WHERE PK_cardID = '$req->cardNo' AND Password = '$req->pin'";
+  $cred = $conn->query($sql);
+  if(strcmp($req->cred, $cred) === 0){
     $sql = "SELECT Balance FROM card WHERE PK_cardID = '$req->cardNo'";
     $balance = $conn->query($sql);
     if($balance > $req->amount){
@@ -122,37 +148,47 @@ if (strcmp($req->msgType, "LoginReq") === 0) {
     }
   }else(){
     $reply->msgType = "TransferReply";
-    $reply->status = "Wrong cred";
+    $reply->status = "ERROR";
   }
 
 
 }else if (strcmp($req->msgType, "AccStmtReq") === 0) {
-  if($cred === $req->cred){
+  $sql = "SELECT cred FROM card WHERE PK_cardID = '$req->cardNo' AND Password = '$req->pin'";
+  $cred = $conn->query($sql);
+  if(strcmp($req->cred, $cred) === 0){
     $reply->msgType = "AccStmtReply";
     $reply->cardNo = $req->cardNo;
     $reply->accNo = $req->accNo;
     $reply->cred = $req->cred;
     $reply->result = "succ";
+    $reply->status = "Suscces";
   }else(){
     $reply->msgType = "AccStmtReply";
-    $reply->result = "Wrong cred";
+    $reply->result = "ERROR";
+    $reply->status = "ERROR";
   }
 
 
 }else if (strcmp($req->msgType, "ChqBookReq") === 0) {
-  if($cred === $req->cred){
+  $sql = "SELECT cred FROM card WHERE PK_cardID = '$req->cardNo' AND Password = '$req->pin'";
+  $cred = $conn->query($sql);
+  if(strcmp($req->cred, $cred) === 0){
     $reply->msgType = "ChqBookReply";
     $reply->cardNo = $req->cardNo;
     $reply->accNo = $req->accNo;
     $reply->cred = $req->cred;
     $reply->result = "succ";
+    $reply->status = "Suscces";
   }else(){
     $reply->msgType = "ChqBookReply";
-    $reply->result = "Wrong cred";
+    $reply->result = "ERROR";
+    $reply->status = "ERROR";
   }
 
 }else if (strcmp($req->msgType, "ChgPinReq") === 0) {
-  if($cred === $req->cred){
+  $sql = "SELECT cred FROM card WHERE PK_cardID = '$req->cardNo' AND Password = '$req->pin'";
+  $cred = $conn->query($sql);
+  if(strcmp($req->cred, $cred) === 0){
     $sql = "UPDATE card set Password = '$req->newPin' where PK_cardID = '$req->cardNo' AND Password = '$req->oldPin'";
     $result = $conn->query($sql);
     $reply->msgType = "ChgPinReply";
@@ -161,15 +197,19 @@ if (strcmp($req->msgType, "LoginReq") === 0) {
     $reply->newPin = $req->newPin;
     $reply->cred = $req->cred;
     $reply->result = "succ";
+    $reply->status = "Suscces";
   }else(){
     $reply->msgType = "ChgPinReply";
-    $reply->result = "fail";
+    $reply->result = "ERROR";
+    $reply->status = "ERROR";
   }
 
 
 
 }else if (strcmp($req->msgType, "ChgLangReq") === 0) {
-  if($cred === $req->cred){
+  $sql = "SELECT cred FROM card WHERE PK_cardID = '$req->cardNo' AND Password = '$req->pin'";
+  $cred = $conn->query($sql);
+  if(strcmp($req->cred, $cred) === 0){
     $sql = "UPDATE card set Language = '$req->newLang' where PK_cardID = '$req->cardNo' AND Password = '$req->oldPin'";
     $reply->msgType = "ChgLangReply";
     $reply->cardNo = $req->cardNo;
@@ -177,9 +217,11 @@ if (strcmp($req->msgType, "LoginReq") === 0) {
     $reply->newLang = $req->newLang;
     $reply->cred = $req->cred;
     $reply->result = "succ";
+    $reply->status = "Suscces";
   }else(){
     $reply->msgType = "ChgLangReply";
-    $reply->result = "fail";
+    $reply->result = "ERROR";
+    $reply->status = "ERROR";
   }
 
 }
